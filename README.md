@@ -19,7 +19,9 @@ See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
+
 **Python and Pip**
+
 We will be using Python 3.x for this project.
 
 First, check to see if Python is already installed. You can do this by typing which python in your shell. If Python is installed, the response will be the path to the Python executable.
@@ -50,7 +52,6 @@ The file will be passed to the application as a command line argument. See **App
 
 ### Installing
 
-
 Using the pip command, install Boto3:
 
 ```
@@ -61,6 +62,13 @@ Other required libraries are `ConfigParser` and `argparse`:
 ```
 pip install ConfigParser
 pip install argparse
+```
+
+Finally, clone the project files to you machine:
+
+```
+git clone https://github.com/peterjuma/manage_aws_services.git
+cd manage_aws_services
 ```
 
 We now have our environmane ready to run our application.
