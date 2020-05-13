@@ -1,147 +1,194 @@
----
+# CLI Application To Manage AWS Services
+
+This is a simple command line interface (CLI) application that allows users to take an inventory of resources that are currently provisioned.
+Working with Boto3 and Python libraries, we use Python scripts to interact with infrastructure provided by Amazon Web Services (AWS).
+
+You can list resources of the following AWS services:
+1. IAM users
+2. EC2 instances
+3. RDS instances
+4. S3 buckets
+5. ECR repos
+6. ECS clusters
 
 
----
+## Getting Started
 
-<h2 id="dynamic-hosts">Dynamic Hosts</h2>
-<pre><code>ansible all -m ping -i ec2.py --list-hosts
-ansible -i ec2.py -u ec2-user us-east-1b -m ping --list-hosts
-ansible -b -i ec2.py -u ec2-user us-east-1b -m yum -a "name='*' state=latest" --private-key=keypairs/ec2_priv_key.pem
-</code></pre>
-<p><a href="https://aws.amazon.com/blogs/apn/getting-started-with-ansible-and-dynamic-amazon-ec2-inventory-management/">https://aws.amazon.com/blogs/apn/getting-started-with-ansible-and-dynamic-amazon-ec2-inventory-management/</a></p>
-<h2 id="python">Python</h2>
-<p>List all modules from Python console</p>
-<pre><code>python
-help("modules")
-</code></pre>
-<h2 id="boto">Boto</h2>
-<p>cat ~/.boto</p>
-<pre><code>[Credentials]
-aws_access_key_id="AKIARTPLBSPOMZAHT2U7"
-aws_secret_access_key="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"
-</code></pre>
-<h2 id="credentials">Credentials</h2>
-<p><a href="https://boto3.amazonaws.com/v1/documentation/api/1.9.42/guide/configuration.html">https://boto3.amazonaws.com/v1/documentation/api/1.9.42/guide/configuration.html</a><br>
-The mechanism in which boto3 looks for credentials is to search through a list of possible locations and stop as soon as it finds credentials.<br>
-The order in which Boto3 searches for credentials is:</p>
-<ol>
-<li>Passing credentials as parameters in the boto.client() method</li>
-<li>Passing credentials as parameters when creating a Session object</li>
-<li>Environment variables</li>
-<li>Shared credential file (~/.aws/credentials)</li>
-<li>AWS config file (~/.aws/config)<br>
-6 .Assume Role provider</li>
-<li>Boto2 config file (/etc/boto.cfg and ~/.boto)</li>
-<li>Instance metadata service on an Amazon EC2 instance that has an IAM role configured.</li>
-</ol>
-<h2 id="how-to-specify-credentials-when-connecting-to-boto3-s3">How to specify credentials when connecting to boto3 S3?</h2>
-<p>You can create a session:</p>
-<pre><code>import boto3
-session = boto3.Session(
-    aws_access_key_id=settings.AWS_SERVER_PUBLIC_KEY,
-    aws_secret_access_key=settings.AWS_SERVER_SECRET_KEY,
-)
-</code></pre>
-<p>Then use that session to get an S3 resource:</p>
-<p><code>s3 = session.resource('s3')</code></p>
-<p>You can get a client with new session directly like below.</p>
-<pre><code>s3_client = boto3.client('s3',
-                     aws_access_key_id=settings.AWS_SERVER_PUBLIC_KEY,
-                     aws_secret_access_key=settings.AWS_SERVER_SECRET_KEY,
-                     region_name=REGION_NAME
-                     )
-</code></pre>
-<h2 id="print-formatting">Print Formatting</h2>
-<pre><code># Python program showing  
-# use of format() method
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+See deployment for notes on how to deploy the project on a live system.
 
-# using format() method
-print('I love {} for "{}!"'.format('Geeks', 'Geeks'))
+### Prerequisites
 
-# using format() method and refering  
-# a position of the object
-print('{0} and {1}'.format('Geeks', 'Portal'))
+**Python and Pip**
+We will be using Python 3.x for this project.
 
-print('{1} and {0}'.format('Geeks', 'Portal'))
-</code></pre>
-<hr>
-<pre><code># print integer and float value
-print("Geeks : % 2d, Portal : % 5.2f" %(1, 05.333))  
+First, check to see if Python is already installed. You can do this by typing which python in your shell. If Python is installed, the response will be the path to the Python executable.
+If Python is not installed, go to the [Python.org](https://www.python.org/downloads/) website for information on downloading and installing Python for your particular operating system.
 
-# print integer value
-print("Total students : % 3d, Boys : % 2d" %(240, 120))
+Check your version of Python by typing `python -V`.
 
-# print octal value
-print("% 7.3o"% (25))
+The next thing we’ll need is pip, the Python package manager. We’ll use pip to install the Boto3 library. You can check for pip by typing `which pip`. If pip is installed, the response will be the path to the pip executable.
+If pip is not installed, follow the [instructions at pip.pypa.io](https://pip.pypa.io/en/stable/installing/) to get pip installed on your system.
 
-# print exponential value
-print("% 10.3E"% (356.08977))
-</code></pre>
-<hr>
-<h3 id="iam">IAM</h3>
-<ol>
-<li>List IAM Users</li>
-<li>List EC2 Instances</li>
-<li>List RDS Instances</li>
-<li>List S3 Buckets</li>
-<li>List ECR Repos</li>
-<li>List ECS Clusters</li>
-</ol>
-<pre><code>root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS# ./manage_aws-v1.1.py -h
-usage: manage_aws-v1.1.py [-h] -s {iam,ec2,rds,s3,ecr,ecs} -i INPUT
+Check your version of pip by typing `pip -V`. Your version of pip should be 9.0.1 or newer.
+
+With Python and pip installed, we can install the packages needed for our application.
+
+**AWS Credentials**
+
+Store your AWS account access credentials in a file in INI format below. Take note of the file path.
+
+```
+[credentials]
+AWS_ACCESS_KEY_ID = XXXXXXXXXXX
+AWS_SECRET_ACCESS_KEY = XXXXXXXXXXX
+AWS_REGION = XXXXXXXXXXX
+```
+
+The file will be passed to the application as a command line argument. See **Application Usage** section.
+
+
+### Installing
+
+
+Using the pip command, install Boto3:
+
+```
+pip install awscli boto3 -U --ignore-installed six
+```
+
+Other required libraries are `ConfigParser` and `argparse`:
+```
+pip install ConfigParser
+pip install argparse
+```
+
+We now have our environmane ready to run our application.
+
+## Application Usage
+Now that we have our installation ready, lets go through how to put the application to use in your environment
+
+**Comandline Options**
+
+
+`manage_aws_services.py -s [--service] {AWS service name} -i [--input] {AWS credentials file path}`
+
+
+```
+./manage_aws_services.py -h
+usage: manage_aws_services.py [-h] -s {iam,ec2,rds,s3,ecr,ecs} -i INPUT
 
 optional arguments:
   -h, --help            show this help message and exit
   -s {iam,ec2,rds,s3,ecr,ecs}, --service {iam,ec2,rds,s3,ecr,ecs}
                         List instances of AWS services
   -i INPUT, --input INPUT
-                        Path to AWS Credentials file in INI format
-</code></pre>
-<h2 id="iam-1">IAM</h2>
-<pre class=" language-root"><code class="prism @PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating language-root">Username        Member Of Groups
+                        Path to AWS Credentials file in INI
+```
+
+**Note**: The allowed services are `iam`, `ec2`, `rds`, `s3`, `ecr` and `ecs`.
+
+
+
+**List AWS IAM Users**
+
+Command:
+
+`./manage_aws_services.py -s iam -i "/path/to/awscredentials.ini"`
+
+Output:
+```
+Username        Member Of Groups
 --------------------------------
 mcplus
 linuxuser       network_admins, linux_admins, IT-OPS, IT-Dev
 cloud_user
 networkuser     linux_admins
-mpython network_admins, linux_admins, marketing
+mpython         network_admins, linux_admins, marketing
 jcleese
-root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS#
-</code></pre>
-<h2 id="ec2">EC2</h2>
-<pre><code>root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS# ./manage_aws-v1.1.py -s ec2 -i "/mnt/d/DevOpsProjects/Automating AWS/awscredentials.ini"
+```
+
+
+**List AWS EC2 Instances**
+
+Command:
+
+`./manage_aws_services.py -s ec2 -i "/path/to/awscredentials.ini"`
+
+Output:
+```
 Instance ID             State            Private IP             Public IP
 i-060709eeb61833873     pending         172.31.84.133           3.84.6.86
 i-00c635b2fd0af14a2     running         10.10.10.147            3.227.11.23
 i-09747831e5689ddeb     running         10.10.10.82             3.80.213.236
-root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS#
-</code></pre>
-<h2 id="rds">RDS</h2>
-<pre><code>root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS# ./manage_aws-v1.1.py -s rds -i "/mnt/d/DevOpsProjects/Automating AWS/awscredentials.ini"
+```
+
+**List AWS RDS Instances**
+
+Command:
+
+`./manage_aws_services.py -s rds -i "/path/to/awscredentials.ini"`
+
+Output:
+```
 Database Name   Database Endpoint                                                       Status
 dbserver-001    dbadmin@dbserver-001.cnayjve5rxva.us-east-1.rds.amazonaws.com:3306      available
 dbserver-002    dbadmin@dbserver-002.cnayjve5rxva.us-east-1.rds.amazonaws.com:3306      available
-root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS#
-</code></pre>
-<h2 id="s3">S3</h2>
-<pre><code>root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS# ./manage_aws-v1.1.py -s s3 -i "/mnt/d/DevOpsProjects/Automating AWS/awscredentials.ini"
+
+```
+
+
+**List AWS S3 Buckets**
+
+Command:
+
+`./manage_aws_services.py -s s3 -i "/path/to/awscredentials.ini"`
+
+Output:
+```
 Bucket Name
 -----------------
 data-471449
 data-803398
-</code></pre>
-<h2 id="ecr">ECR</h2>
-<pre><code>root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS# ./manage_aws-v1.1.py -s ecr -i "/mnt/d/DevOpsProjects/Automating AWS/awscredentials.ini"
+```
+
+
+**List AWS ECR Repositories**
+
+Command:
+
+`./manage_aws_services.py -s ecr -i "/path/to/awscredentials.ini"`
+
+Output:
+
+```
 Repository Name
 -----------------
 super/cool
 deal/unbreaker
-</code></pre>
-<h2 id="ecs">ECS</h2>
-<pre><code>root@PJPC-BBRPGE8:/mnt/d/DevOpsProjects/Automating AWS# ./manage_aws-v1.1.py -s ecs -i "/mnt/d/DevOpsProjects/Automating AWS/awscredentials.ini"
+```
+
+
+**List AWS ECS clusters**
+
+Command:
+
+`./manage_aws_services.py -s ecs -i "/path/to/awscredentials.ini"`
+
+Output:
+
+```
 Cluster ARN
 -----------------
 arn:aws:ecs:us-east-1:722840993652:cluster/example-cluster
 arn:aws:ecs:us-east-1:722840993652:cluster/another-cluster
-</code></pre>
+```
 
+
+## Authors
+
+* **Peter Juma** - *Initial work* - [peterjuma](https://gitlab.com/peterjuma)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
