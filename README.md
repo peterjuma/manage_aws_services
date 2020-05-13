@@ -17,8 +17,8 @@ help("modules")
 <h2 id="boto">Boto</h2>
 <p>cat ~/.boto</p>
 <pre><code>[Credentials]
-aws_access_key_id="AKIARTPLBSPOMZAHT2U7"
-aws_secret_access_key="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"
+aws_access_key_id="XXXXXXXXXXXXXXXXXX"
+aws_secret_access_key="xxxxxxxxxxxxxxxxxx"
 </code></pre>
 <h2 id="credentials">Credentials</h2>
 <p><a href="https://boto3.amazonaws.com/v1/documentation/api/1.9.42/guide/configuration.html">https://boto3.amazonaws.com/v1/documentation/api/1.9.42/guide/configuration.html</a><br>
@@ -145,3 +145,6 @@ arn:aws:ecs:us-east-1:722840993652:cluster/example-cluster
 arn:aws:ecs:us-east-1:722840993652:cluster/another-cluster
 </code></pre>
 
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbLTUwODI1ODQzOV19
+-->
