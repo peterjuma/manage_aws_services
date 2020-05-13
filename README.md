@@ -20,7 +20,7 @@ See deployment for notes on how to deploy the project on a live system.
 ### Prerequisites
 
 
-**Python and Pip**
+  **_Python and Pip_**
 
 We will be using Python 3.x for this project.
 
@@ -36,7 +36,7 @@ Check your version of pip by typing `pip -V`. Your version of pip should be 9.0.
 
 With Python and pip installed, we can install the packages needed for our application.
 
-**AWS Credentials**
+  **_AWS Credentials_**
 
 Store your AWS account access credentials in a file in INI format below. Take note of the file path.
 
