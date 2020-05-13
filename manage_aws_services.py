@@ -3,6 +3,7 @@ from configparser import ConfigParser
 import boto3
 import argparse
 
+# Read & parse commandline arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--service', dest='aws_service', choices=['iam', 'ec2', 'rds', 's3', 'ecr', 'ecs'], help="List instances of AWS services", required=True)
 parser.add_argument('-i', '--input', type=str, help="Path to AWS Credentials file in INI format", required=True)
